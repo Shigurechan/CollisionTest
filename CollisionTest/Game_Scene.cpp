@@ -20,11 +20,8 @@ void Game_Scene::Update()
 	player->Update();
 	enemy->Update();
 	
-	if (player->mCol.Intersect(enemy->mCol) == true)
-	{
-		printf("‚ ‚ ‚ \n");
-	}
-
+	player->mCol.Intersect(enemy->mCol);
+	
 
 }
 

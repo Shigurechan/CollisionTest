@@ -1,23 +1,63 @@
 #include "Collision.hpp"
-
+#include "Entry.hpp"
 //コンストラクタ
 Box_Collision::Box_Collision()
 {
-
-	mIsTrigger = false;
+	TagType = Tag::Invalid;	//タグ
+	mIsTrigger = false;		//トリガータイプ
 }
 
 //矩形同士の交差判定
-bool Box_Collision::Intersect( Box_Collision &a)
+void Box_Collision::Intersect( Box_Collision &a)
 {
-	if ((a.getPosition().x + a.getSize().x > mPosition.x && mPosition.x + mSize.x > a.getPosition().x)
-		&& (a.getPosition().y + a.getSize().y > mPosition.y && mPosition.y + mSize.y > a.getPosition().y))
+	if ((a.getPosition().x + a.getSize().x > mPosition->x && mPosition->x + mSize->x > a.getPosition().x)
+		&& (a.getPosition().y + a.getSize().y > mPosition->y && mPosition->y + mSize->y > a.getPosition().y))
 	{
-		return true;
+		printf("true\n");
+
+		if (mIsTrigger == false) 
+		{
+			printf("mIsTriggeer = false\n");
+			//めり込み量を修正
+			if (*mVector == VECTOR_RIGHT)
+			{
+				mPosition->x = a.getPosition().x - a.getSize().x;
+			}
+			else if (*mVector == VECTOR_LEFT)
+			{
+				mPosition->x = a.getPosition().x + a.getSize().x;
+			}
+			else if (*mVector == VECTOR_UP)
+			{
+				mPosition->y = a.getPosition().y + a.getSize().y;
+			}
+			else if (*mVector == VECTOR_DOWN)
+			{
+				mPosition->y = a.getPosition().y - a.getSize().y;
+			}
+
+			
+			TagType = a.getTag();	//タグを取得
+
+
+		}
+		else
+		{
+
+		}
+
+
+
+
+
+		//return true;
 	}
 	else
 	{
-		return false;
+		TagType = Tag::Invalid;
+		//printf("false\n");
+
+		//return false;
 	}
 }
 
@@ -33,27 +73,32 @@ bool Box_Collision::getTrigger()
 //座標を取得
 glm::ivec2 Box_Collision::getPosition()
 {
-	return mPosition;
+	return *mPosition;
 }
 
 //サイズを取得
 glm::ivec2 Box_Collision::getSize()
 {
-	return mSize;
+	return *mSize;
 }
 
-//オブジェクトタイプを取得
-StageObjectType Box_Collision::getObjectType()
+//取得したタイプを取得
+Tag Box_Collision::getTag()
 {
-	return Type;
+	return TagType;
 }
 
-//オブジェクトタイプを設定
+//方向を取得
 glm::ivec2 Box_Collision::getVector()
 {
-	return mVector;
+	return *mVector;
 }
 
+//タイプを取得
+Tag Box_Collision::getMyTag()
+{
+	return isGetTagType;
+}
 
 
 // #################################### 設定　関係
@@ -65,25 +110,25 @@ void Box_Collision::setTrigger(bool tri)
 }
 
 //座標を設定
-void Box_Collision::setPosition(glm::ivec2 pos)
+void Box_Collision::setPosition(glm::ivec2 *pos)
 {
 	mPosition = pos;
 }
 
 // サイズを設定
-void Box_Collision::setSize(glm::ivec2 size)
+void Box_Collision::setSize(glm::ivec2 *size)
 {
 	mSize = size;
 }
 
 //オブジェクトタイプを設定
-void Box_Collision::setStageObjectType(StageObjectType type)
+void Box_Collision::setTag(Tag type)
 {
-	Type = type;
+	TagType = type;
 }
 
 //オブジェクトタイプを設定
-void Box_Collision::setVector(glm::ivec2 vec)
+void Box_Collision::setVector(glm::ivec2 *vec)
 {
 	mVector = vec;
 }

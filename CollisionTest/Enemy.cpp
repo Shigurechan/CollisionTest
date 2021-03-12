@@ -12,9 +12,9 @@ Enemy::Enemy(Entry* e) : Actor(e)
 	mSize.y = 80;
 
 
-	mCol.setPosition(mPosition);
-	mCol.setSize(mSize);
-
+	mCol.setPosition(&mPosition);
+	mCol.setSize(&mSize);
+	mCol.setTag(Tag::Enemy);
 
 }
 

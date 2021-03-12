@@ -12,8 +12,9 @@ Player::Player(Entry* e) : Actor(e)
 	mSize.y = 80;
 
 	//“–‚½‚è”»’è‚ðÝ’è
-	mCol.setPosition(mPosition);
-	mCol.setSize(mSize);
+	mCol.setPosition(&mPosition);
+	mCol.setSize(&mSize);
+	mCol.setVector(&mVector);
 
 }
 
@@ -25,31 +26,38 @@ void Player::Update()
 	if (Owner->InputKey->getKeyDownHold(KEY_INPUT_LEFT) > 0 )
 	{
 		mPosition.x += -speed;
+		mVector = VECTOR_LEFT;
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_RIGHT) > 0)
 	{
 		mPosition.x += +speed;
+		mVector = VECTOR_RIGHT;
 
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_UP) > 0)
 	{
 		mPosition.y += -speed;
+		mVector = VECTOR_UP;
 
 	}
 	else if(Owner->InputKey->getKeyDownHold(KEY_INPUT_DOWN) > 0)
 	{
 		mPosition.y += +speed;
+		mVector = VECTOR_DOWN;
 
 	}
 	else {
 		speed = 0;
+		mVector = glm::ivec2(0,0);
+
 	}
 
-	mCol.setPosition(mPosition);
+
+	
+//	mCol.setPosition(&mPosition);
 
 
-
-
+	printf("Tag: %d\n",mCol.getTag());
 
 
 
