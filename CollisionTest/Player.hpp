@@ -5,7 +5,7 @@
 
 class Entry;
 
-class Player : public Actor , public Box_Collision
+class Player : public Actor 
 {
 public:
 
@@ -15,10 +15,10 @@ public:
 	void Update();		//çXêV
 	void Draw();		//ï`âÊ
 
-	//Box_Collision mCol;
+	BoxCollision mCol;
 private:
 	glm::ivec2 mSize;
-
+	glm::ivec2 Max;
 
 
 

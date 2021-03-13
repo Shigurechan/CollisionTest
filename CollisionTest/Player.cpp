@@ -2,7 +2,7 @@
 #include "Entry.hpp"
 #include "Collision.hpp"
 
-Player::Player(Entry* e) : Actor(e) , Box_Collision()
+Player::Player(Entry* e) : Actor(e)
 {
 	//èâä˙ç¿ïW
 	mPosition.x = 235;
@@ -13,10 +13,17 @@ Player::Player(Entry* e) : Actor(e) , Box_Collision()
 	mSize.y = 100 - 1;
 
 	//ìñÇΩÇËîªíËÇê›íË
-//	mCol.setPosition(&mPosition);
-//	mCol.setSize(&mSize);
-//	mCol.setVector(&mVector);
-//	mCol.setTag(Tag::Player);
+
+	mCol.setVector(&mVector);
+	mCol.setTag(Tag::Player);
+
+
+	mCol.setMax(&Max);
+	mCol.setMin(&mPosition);
+	
+	mCol.setTag(Tag::Player);
+
+
 	//mCol.setTrigger(true);
 }
 
@@ -50,9 +57,11 @@ void Player::Update()
 		mVector = glm::ivec2(0,0);
 
 	}
+	
+	Max = mPosition + mSize;
 
 
-	//printf("Player Tag: %d\n", mCol.getTag());
+	printf("player: %d\n", mCol.getTag());
 
 
 

@@ -12,13 +12,25 @@ Enemy::Enemy(Entry* e) : Actor(e)
 	mPosition.x = (SCREEN_WIDTH / 2) - (mSize.x / 2);
 	mPosition.y = (SCREEN_HEIGHT / 2) - (mSize.y / 2);
 
-	
+	mVector = VECTOR_NONE;
+	mCol.setVector(&mVector);
+	mCol.setTag(Tag::Player);
+
+
+	Max = mPosition + mSize;
+	mCol.setMax(&Max);
+	mCol.setMin(&mPosition);
+
+
+	mCol.setTag(Tag::Enemy);
+
 }
 
 //çXêV
 void Enemy::Update()
 {
-	
+	printf("Enemy: %d\n",mCol.getTag());
+
 }
 
 //ï`âÊ

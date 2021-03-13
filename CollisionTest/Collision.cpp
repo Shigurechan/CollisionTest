@@ -1,119 +1,50 @@
 #include "Collision.hpp"
 #include "Entry.hpp"
+
+
+/*####################################################
+* 当たり判定の基底クラス
+######################################################*/
+
 //コンストラクタ
-Box_Collision::Box_Collision()
+Collision::Collision()
 {
 	col_TagType = Tag::Invalid;	//取得　タグ
 	my_TagType = Tag::Invalid;	//自身　タグ
 
 	IsTrigger = false;		//トリガータイプ
 	isCol = false;			//交差したかどうか？
+	Vector = nullptr;		//方向
 }
-/*
-//矩形同士の交差判定
-void Box_Collision::Intersect( Box_Collision &a)
-{
-	if ((a.getPosition().x + a.getSize().x > Position->x && Position->x + Size->x > a.getPosition().x)
-		&& (a.getPosition().y + a.getSize().y > Position->y && Position->y + Size->y > a.getPosition().y))
-	{
-		isCol = true;
-		col_TagType = a.getMyTag();	//タグを取得
-		a.setColTag(getMyTag());	//タグを設定
-		
-		if (IsTrigger == false) 
-		{
 
-			//めり込み量を修正
-			if (*Vector == VECTOR_RIGHT)
-			{
-				Position->x = a.getPosition().x - a.getSize().x;
-			}
-			else if (*Vector == VECTOR_LEFT)
-			{
-				Position->x = a.getPosition().x + a.getSize().x;
-			}
-			else if (*Vector == VECTOR_UP)
-			{
-				Position->y = a.getPosition().y + a.getSize().y;
-			}
-			else if (*Vector == VECTOR_DOWN)
-			{
-				Position->y = a.getPosition().y - a.getSize().y;
-			}
-			else if (*Vector == VECTOR_NONE)
-			{
-				//ベクトルが設定されていないとき
-	
-				//めり込み量を修正
-				if (a.getVector() == VECTOR_RIGHT)
-				{
-					Position->x = a.getPosition().x + a.getSize().x;
-				}
-				else if (a.getVector() == VECTOR_LEFT)
-				{
-					Position->x = a.getPosition().x - a.getSize().x;
-				}
-				else if (a.getVector() == VECTOR_UP)
-				{
-					Position->y = a.getPosition().y - a.getSize().y;
-				}
-				else if (a.getVector() == VECTOR_DOWN)
-				{
-					Position->y = a.getPosition().y + a.getSize().y;
-				}
-			}
-		}	
-	}
-	else
-	{
-		//交差していない
-		isCol = false;
-		col_TagType = Tag::Invalid;
-		a.setColTag(Tag::Invalid);	
-	}
-}
-*/
 // #################################### 取得　関係
 
 //トリガータイプを取得
-bool Box_Collision::getTrigger()
+bool Collision::getTriggerType()
 {
 	return IsTrigger;
 }
 
-
-//座標を取得
-glm::ivec2 Box_Collision::getPosition()
-{
-	return *Position;
-}
-
-//サイズを取得
-glm::ivec2 Box_Collision::getSize()
-{
-	return *Size;
-}
-
 //取得したタイプを取得
-Tag Box_Collision::getTag()
+Tag Collision::getTag()
 {
 	return col_TagType;
 }
 
 //方向を取得
-glm::ivec2 Box_Collision::getVector()
+glm::ivec2 Collision::getVector()
 {
 	return *Vector;
 }
 
 //タイプを取得
-Tag Box_Collision::getMyTag()
+Tag Collision::getMyTag()
 {
 	return my_TagType;
 }
 
 //当たったかどうか？
-bool Box_Collision::getCol()
+bool Collision::getCol()
 {
 	return isCol;
 }
@@ -121,115 +52,196 @@ bool Box_Collision::getCol()
 // #################################### 設定　関係
 
 //トリガータイプを設定
-void Box_Collision::setTrigger(bool tri)
+void Collision::setTriggerType(bool tri)
 {
 	IsTrigger = tri;
 }
 
-//座標を設定
-void Box_Collision::setPosition(glm::ivec2 *pos)
-{
-	Position = pos;
-}
-
-// サイズを設定
-void Box_Collision::setSize(glm::ivec2 *size)
-{
-	Size = size;
-}
-
-//オブジェクトタイプを設定
-void Box_Collision::setTag(Tag type)
+//タグタイプを設定
+void Collision::setTag(Tag type)
 {	
 	my_TagType = type;
 }
 
 //オブジェクトタイプを設定
-void Box_Collision::setVector(glm::ivec2 *vec)
+void Collision::setVector(glm::ivec2 *vec)
 {
 	Vector = vec;
 }
 
 //当たり判定のタグを設定
-void Box_Collision::setColTag(Tag type)
+void Collision::setColTag(Tag type)
 {
 	col_TagType = type;
 }
 
+//当たり判定のタグを設定
+void Collision::setCol(bool b)
+{
+	isCol = b;
+}
+
+
 //デストラクタ
-Box_Collision::~Box_Collision()
+Collision::~Collision()
 {
 
 }
 
 
+/*##############################################################################################################################################*/
 
+/*####################################################
+* 矩形の当たり判定
+######################################################*/
 
-
-
-
-
-/*
-//矩形同士の交差判定
-void Box_Collision::Intersect(Box_Collision& a)
+//コンストラクタ
+BoxCollision::BoxCollision()
 {
-	if ((a.getPosition().x + a.getSize().x > Position->x && Position->x + Size->x > a.getPosition().x)
-		&& (a.getPosition().y + a.getSize().y > Position->y && Position->y + Size->y > a.getPosition().y))
-	{
-		isCol = true;
-		col_TagType = a.getMyTag();	//タグを取得
-		a.setColTag(getMyTag());	//タグを設定
+	box.mMax = nullptr;	//AABB初期化
+	box.mMin = nullptr;	//AABB初期化
+}
 
-		if (IsTrigger == false)
+
+
+void BoxCollision::Intersect(BoxCollision& col)
+{
+	if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
+		&& (col.getMax().y > box.mMin->y && box.mMax->y > col.getMin().y))
+	{
+		
+		setCol(true);				//当たり判定を設定
+		setColTag(col.getMyTag());	//タグを取得
+		col.setColTag(getMyTag());	//タグを設定
+
+		if (getTriggerType() == false)
 		{
 
 			//めり込み量を修正
-			if (*Vector == VECTOR_RIGHT)
+			if (getVector() == VECTOR_RIGHT)
 			{
-				Position->x = a.getPosition().x - a.getSize().x;
+				glm::ivec2 b = *box.mMax - *box.mMin;
+				box.mMin->x = (col.getMin().x - b.x);
+
 			}
-			else if (*Vector == VECTOR_LEFT)
+			else if (getVector() == VECTOR_LEFT)
 			{
-				Position->x = a.getPosition().x + a.getSize().x;
+			
+				box.mMin->x = (col.getMax().x);
+
 			}
-			else if (*Vector == VECTOR_UP)
+			else if (getVector() == VECTOR_UP)
 			{
-				Position->y = a.getPosition().y + a.getSize().y;
+				//printf("ううう\n");
+				glm::ivec2 b = *box.mMax - *box.mMin;
+				box.mMin->y = (col.getMin().y + b.y + 1);
+
 			}
-			else if (*Vector == VECTOR_DOWN)
+			else if (getVector() == VECTOR_DOWN)
 			{
-				Position->y = a.getPosition().y - a.getSize().y;
+				//printf("111\n");
+
+				glm::ivec2 b = *box.mMax - *box.mMin;
+
+				box.mMin->y = (col.getMin().y - b.y);
+
 			}
-			else if (*Vector == VECTOR_NONE)
+			else if (getVector() == VECTOR_NONE)
 			{
 				//ベクトルが設定されていないとき
+				
+				if (col.getVector() == VECTOR_RIGHT)
+				{		
+					glm::ivec2 b = col.getMax() - col.getMin();
+					glm::ivec2 t = col.getMin();
+					t.x = box.mMin->x - b.x;
+					col.setMinValue(t);
+				}
+				else if (col.getVector() == VECTOR_LEFT)
+				{	
+					glm::ivec2 t = col.getMin();
+					t.x = box.mMax->x;
+					col.setMinValue(t);
+				}
+				else if (col.getVector() == VECTOR_UP)
+				{
+					glm::ivec2 b = col.getMax() - col.getMin();
+					glm::ivec2 t = col.getMin();
+					t.y = box.mMax->y;
+					col.setMinValue(t);
 
-				//めり込み量を修正
-				if (a.getVector() == VECTOR_RIGHT)
-				{
-					Position->x = a.getPosition().x + a.getSize().x;
 				}
-				else if (a.getVector() == VECTOR_LEFT)
+				else if (col.getVector() == VECTOR_DOWN)
 				{
-					Position->x = a.getPosition().x - a.getSize().x;
-				}
-				else if (a.getVector() == VECTOR_UP)
-				{
-					Position->y = a.getPosition().y - a.getSize().y;
-				}
-				else if (a.getVector() == VECTOR_DOWN)
-				{
-					Position->y = a.getPosition().y + a.getSize().y;
-				}
+					glm::ivec2 b = col.getMax() - col.getMin();
+					glm::ivec2 t = col.getMin();
+					t.y = box.mMin->y - b.y;
+					col.setMinValue(t);
+
+				}	
 			}
 		}
 	}
 	else
 	{
 		//交差していない
-		isCol = false;
-		col_TagType = Tag::Invalid;
-		a.setColTag(Tag::Invalid);
+		
+		setCol(false);
+		setColTag(Tag::Invalid);
+		col.setColTag(Tag::Invalid);
 	}
 }
-*/
+
+
+// #################################### 取得　関係
+
+//最大値を取得
+glm::ivec2 BoxCollision::getMax()
+{
+	return *box.mMax;
+}
+
+//最小値を取得
+glm::ivec2 BoxCollision::getMin()
+{
+	return *box.mMin;
+}
+
+
+
+
+// #################################### 設定　関係
+
+//最大値を設定
+void BoxCollision::setMax(glm::ivec2 *max)
+{
+	box.mMax = max;
+}
+
+//最小値を設定
+void BoxCollision::setMin(glm::ivec2 *min)
+{
+	box.mMin = min;
+}
+
+//最大値の値を設定
+void BoxCollision::setMaxValue(glm::ivec2& max)
+{
+	*box.mMax = max;
+}
+
+//最小値の値を設定
+void BoxCollision::setMinValue(glm::ivec2& min)
+{
+	*box.mMin = min;
+
+}
+
+
+
+//デストラクタ
+BoxCollision::~BoxCollision()
+{
+
+}
+
