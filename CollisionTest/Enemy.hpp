@@ -17,7 +17,7 @@ public:
 	void Update();		//XV
 	void Draw();		//•`‰æ
 
-	Box_Collision mCol;
+	
 private:
 	glm::ivec2 mSize;
 

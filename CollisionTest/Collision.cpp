@@ -6,60 +6,60 @@ Box_Collision::Box_Collision()
 	col_TagType = Tag::Invalid;	//取得　タグ
 	my_TagType = Tag::Invalid;	//自身　タグ
 
-	mIsTrigger = false;		//トリガータイプ
+	IsTrigger = false;		//トリガータイプ
 	isCol = false;			//交差したかどうか？
 }
-
+/*
 //矩形同士の交差判定
 void Box_Collision::Intersect( Box_Collision &a)
 {
-	if ((a.getPosition().x + a.getSize().x > mPosition->x && mPosition->x + mSize->x > a.getPosition().x)
-		&& (a.getPosition().y + a.getSize().y > mPosition->y && mPosition->y + mSize->y > a.getPosition().y))
+	if ((a.getPosition().x + a.getSize().x > Position->x && Position->x + Size->x > a.getPosition().x)
+		&& (a.getPosition().y + a.getSize().y > Position->y && Position->y + Size->y > a.getPosition().y))
 	{
-
+		isCol = true;
 		col_TagType = a.getMyTag();	//タグを取得
 		a.setColTag(getMyTag());	//タグを設定
 		
-		if (mIsTrigger == false) 
+		if (IsTrigger == false) 
 		{
 
 			//めり込み量を修正
-			if (*mVector == VECTOR_RIGHT)
+			if (*Vector == VECTOR_RIGHT)
 			{
-				mPosition->x = a.getPosition().x - a.getSize().x;
+				Position->x = a.getPosition().x - a.getSize().x;
 			}
-			else if (*mVector == VECTOR_LEFT)
+			else if (*Vector == VECTOR_LEFT)
 			{
-				mPosition->x = a.getPosition().x + a.getSize().x;
+				Position->x = a.getPosition().x + a.getSize().x;
 			}
-			else if (*mVector == VECTOR_UP)
+			else if (*Vector == VECTOR_UP)
 			{
-				mPosition->y = a.getPosition().y + a.getSize().y;
+				Position->y = a.getPosition().y + a.getSize().y;
 			}
-			else if (*mVector == VECTOR_DOWN)
+			else if (*Vector == VECTOR_DOWN)
 			{
-				mPosition->y = a.getPosition().y - a.getSize().y;
+				Position->y = a.getPosition().y - a.getSize().y;
 			}
-			else if (*mVector == VECTOR_NONE)
+			else if (*Vector == VECTOR_NONE)
 			{
 				//ベクトルが設定されていないとき
 	
 				//めり込み量を修正
 				if (a.getVector() == VECTOR_RIGHT)
 				{
-					mPosition->x = a.getPosition().x + a.getSize().x;
+					Position->x = a.getPosition().x + a.getSize().x;
 				}
 				else if (a.getVector() == VECTOR_LEFT)
 				{
-					mPosition->x = a.getPosition().x - a.getSize().x;
+					Position->x = a.getPosition().x - a.getSize().x;
 				}
 				else if (a.getVector() == VECTOR_UP)
 				{
-					mPosition->y = a.getPosition().y - a.getSize().y;
+					Position->y = a.getPosition().y - a.getSize().y;
 				}
 				else if (a.getVector() == VECTOR_DOWN)
 				{
-					mPosition->y = a.getPosition().y + a.getSize().y;
+					Position->y = a.getPosition().y + a.getSize().y;
 				}
 			}
 		}	
@@ -67,31 +67,31 @@ void Box_Collision::Intersect( Box_Collision &a)
 	else
 	{
 		//交差していない
-		
+		isCol = false;
 		col_TagType = Tag::Invalid;
 		a.setColTag(Tag::Invalid);	
 	}
 }
-
+*/
 // #################################### 取得　関係
 
 //トリガータイプを取得
 bool Box_Collision::getTrigger()
 {
-	return mIsTrigger;
+	return IsTrigger;
 }
 
 
 //座標を取得
 glm::ivec2 Box_Collision::getPosition()
 {
-	return *mPosition;
+	return *Position;
 }
 
 //サイズを取得
 glm::ivec2 Box_Collision::getSize()
 {
-	return *mSize;
+	return *Size;
 }
 
 //取得したタイプを取得
@@ -103,7 +103,7 @@ Tag Box_Collision::getTag()
 //方向を取得
 glm::ivec2 Box_Collision::getVector()
 {
-	return *mVector;
+	return *Vector;
 }
 
 //タイプを取得
@@ -112,25 +112,30 @@ Tag Box_Collision::getMyTag()
 	return my_TagType;
 }
 
+//当たったかどうか？
+bool Box_Collision::getCol()
+{
+	return isCol;
+}
 
 // #################################### 設定　関係
 
 //トリガータイプを設定
 void Box_Collision::setTrigger(bool tri)
 {
-	mIsTrigger = tri;
+	IsTrigger = tri;
 }
 
 //座標を設定
 void Box_Collision::setPosition(glm::ivec2 *pos)
 {
-	mPosition = pos;
+	Position = pos;
 }
 
 // サイズを設定
 void Box_Collision::setSize(glm::ivec2 *size)
 {
-	mSize = size;
+	Size = size;
 }
 
 //オブジェクトタイプを設定
@@ -142,7 +147,7 @@ void Box_Collision::setTag(Tag type)
 //オブジェクトタイプを設定
 void Box_Collision::setVector(glm::ivec2 *vec)
 {
-	mVector = vec;
+	Vector = vec;
 }
 
 //当たり判定のタグを設定
@@ -156,3 +161,75 @@ Box_Collision::~Box_Collision()
 {
 
 }
+
+
+
+
+
+
+
+
+/*
+//矩形同士の交差判定
+void Box_Collision::Intersect(Box_Collision& a)
+{
+	if ((a.getPosition().x + a.getSize().x > Position->x && Position->x + Size->x > a.getPosition().x)
+		&& (a.getPosition().y + a.getSize().y > Position->y && Position->y + Size->y > a.getPosition().y))
+	{
+		isCol = true;
+		col_TagType = a.getMyTag();	//タグを取得
+		a.setColTag(getMyTag());	//タグを設定
+
+		if (IsTrigger == false)
+		{
+
+			//めり込み量を修正
+			if (*Vector == VECTOR_RIGHT)
+			{
+				Position->x = a.getPosition().x - a.getSize().x;
+			}
+			else if (*Vector == VECTOR_LEFT)
+			{
+				Position->x = a.getPosition().x + a.getSize().x;
+			}
+			else if (*Vector == VECTOR_UP)
+			{
+				Position->y = a.getPosition().y + a.getSize().y;
+			}
+			else if (*Vector == VECTOR_DOWN)
+			{
+				Position->y = a.getPosition().y - a.getSize().y;
+			}
+			else if (*Vector == VECTOR_NONE)
+			{
+				//ベクトルが設定されていないとき
+
+				//めり込み量を修正
+				if (a.getVector() == VECTOR_RIGHT)
+				{
+					Position->x = a.getPosition().x + a.getSize().x;
+				}
+				else if (a.getVector() == VECTOR_LEFT)
+				{
+					Position->x = a.getPosition().x - a.getSize().x;
+				}
+				else if (a.getVector() == VECTOR_UP)
+				{
+					Position->y = a.getPosition().y - a.getSize().y;
+				}
+				else if (a.getVector() == VECTOR_DOWN)
+				{
+					Position->y = a.getPosition().y + a.getSize().y;
+				}
+			}
+		}
+	}
+	else
+	{
+		//交差していない
+		isCol = false;
+		col_TagType = Tag::Invalid;
+		a.setColTag(Tag::Invalid);
+	}
+}
+*/

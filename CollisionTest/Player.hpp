@@ -3,10 +3,9 @@
 #include "Actor.hpp"
 #include "Collision.hpp"
 
-class Actor;
 class Entry;
 
-class Player : public Actor
+class Player : public Actor , public Box_Collision
 {
 public:
 
@@ -16,7 +15,7 @@ public:
 	void Update();		//çXêV
 	void Draw();		//ï`âÊ
 
-	Box_Collision mCol;
+	//Box_Collision mCol;
 private:
 	glm::ivec2 mSize;
 

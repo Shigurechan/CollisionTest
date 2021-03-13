@@ -4,27 +4,21 @@
 
 Enemy::Enemy(Entry* e) : Actor(e)
 {
-	//初期座標
-	mPosition.x = 500;
-	mPosition.y = 270;
-
 	//サイズ
-	mSize.x = 80;
-	mSize.y = 80;
+	mSize.x = 100;
+	mSize.y = 100;
 
-	mVector = VECTOR_NONE;
+	//初期座標
+	mPosition.x = (SCREEN_WIDTH / 2) - (mSize.x / 2);
+	mPosition.y = (SCREEN_HEIGHT / 2) - (mSize.y / 2);
 
-	mCol.setPosition(&mPosition);
-	mCol.setVector(&mVector);
-	mCol.setSize(&mSize);
-	mCol.setTag(Tag::Enemy);
-
+	
 }
 
 //更新
 void Enemy::Update()
 {
-	printf("Enemy Tag: %d\n",mCol.getTag());
+	
 }
 
 //描画
