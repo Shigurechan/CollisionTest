@@ -26,6 +26,7 @@
 #define VECTOR_DOWN glm::ivec2(0,1)
 #define VECTOR_LEFT glm::ivec2(-1,0)
 #define VECTOR_RIGHT glm::ivec2(1,0)
+#define VECTOR_NONE glm::ivec2(0,0)
 
 #define PI ((float)3.14159265359)	//PI
 

@@ -11,9 +11,9 @@ typedef enum class Tag
 	Enemy,
 	Wall,
 	Item,
-	None,
+	None,		//未設定
 
-	Invalid,
+	Invalid,	//交差してない
 }Tag;
 
 /*####################################################
@@ -33,7 +33,6 @@ public:
 	glm::ivec2 getSize();		//サイズを取得
 	Tag getTag();		//取得したタイプを取得
 	Tag getMyTag();		//タイプを取得
-
 	glm::ivec2 getVector();		//方向を取得
 
 	//設定　関係
@@ -42,30 +41,24 @@ public:
 	void setPosition(glm::ivec2 *pos);	//座標を設定
 	void setSize(glm::ivec2 *size);		//サイズを設定
 	void setVector(glm::ivec2 *vec);	//方向設定
-
-
-
 	void setTrigger(bool tri);			//トリガータイプを設定
+	void setTag(Tag type);				//タグを設定
+	void setColTag(Tag type);			//当たり判定のタグを設定
 
 
-
-	
-
-
-
-	void setTag(Tag type);	//オブジェクトタイプを設定
 	
 protected:
 
 private:
 
-	bool mIsTrigger;		//トリガータイプかどうか？
-	Tag TagType;	//タグ
-	Tag isGetTagType; //取得したタグ
+	bool mIsTrigger;	//トリガータイプかどうか？
+	Tag my_TagType;		//自身タグ
+	Tag col_TagType;	//取得タグ
+
 	glm::ivec2 *mPosition;	//座標
 	glm::ivec2 *mSize;		//サイズ
 	glm::ivec2 *mVector;	//方向
-
+	bool isCol;
 
 
 };

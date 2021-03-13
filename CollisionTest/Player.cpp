@@ -8,14 +8,14 @@ Player::Player(Entry* e) : Actor(e)
 	mPosition.y = 270;
 
 	//ÉTÉCÉY
-	mSize.x = 80;
-	mSize.y = 80;
+	mSize.x = 80 - 1;
+	mSize.y = 80 - 1;
 
 	//ìñÇΩÇËîªíËÇê›íË
 	mCol.setPosition(&mPosition);
 	mCol.setSize(&mSize);
 	mCol.setVector(&mVector);
-
+	mCol.setTag(Tag::Player);
 }
 
 
@@ -53,11 +53,7 @@ void Player::Update()
 	}
 
 
-	
-//	mCol.setPosition(&mPosition);
-
-
-	printf("Tag: %d\n",mCol.getTag());
+	printf("Player Tag: %d\n", mCol.getTag());
 
 
 

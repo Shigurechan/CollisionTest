@@ -1,4 +1,5 @@
 #include "Enemy.hpp"
+#include "Entry.hpp"
 
 
 Enemy::Enemy(Entry* e) : Actor(e)
@@ -11,8 +12,10 @@ Enemy::Enemy(Entry* e) : Actor(e)
 	mSize.x = 80;
 	mSize.y = 80;
 
+	mVector = VECTOR_NONE;
 
 	mCol.setPosition(&mPosition);
+	mCol.setVector(&mVector);
 	mCol.setSize(&mSize);
 	mCol.setTag(Tag::Enemy);
 
@@ -21,7 +24,7 @@ Enemy::Enemy(Entry* e) : Actor(e)
 //çXêV
 void Enemy::Update()
 {
-
+	printf("Enemy Tag: %d\n",mCol.getTag());
 }
 
 //ï`âÊ
