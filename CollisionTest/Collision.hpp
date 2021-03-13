@@ -36,8 +36,8 @@ typedef struct AABB
 
 typedef struct Sphere
 {
-	glm::ivec2 mCenter;	
-	float mRadius;		
+	glm::ivec2 *mCenter;	
+	int *mRadius;		
 }Sphere;
 
 /*####################################################
@@ -134,15 +134,15 @@ public:
 
 
 	//æ“¾@ŠÖŒW
-	float getRadius();		//”¼Œa
+	int getRadius();		//”¼Œa
 	glm::ivec2 getCenter();	//ˆÊ’u
 
 	//İ’è@ŠÖŒW
-	void setRadius(float r);		//”¼Œa
-	void setCenter(glm::ivec2 pos);	//ˆÊ’u
+	void setRadius(int *r);		//”¼Œa
+	void setCenter(glm::ivec2 *pos);	//ˆÊ’u
 
 private:
-	
+	Sphere sp;
 };
 
 

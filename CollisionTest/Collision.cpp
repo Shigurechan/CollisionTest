@@ -245,3 +245,79 @@ BoxCollision::~BoxCollision()
 
 }
 
+
+
+/*##############################################################################################################################################*/
+
+/*####################################################
+*　球の当たり判定
+######################################################*/
+
+
+//コンストラクタ
+SphereCollision::SphereCollision() 
+{
+
+}
+
+//デストラクタ
+SphereCollision::~SphereCollision()
+{
+
+}
+
+//交差判定
+void SphereCollision::Intersect(SphereCollision& col)
+{
+	if ( false )
+	{
+
+		setCol(true);				//当たり判定を設定
+		setColTag(col.getMyTag());	//タグを取得
+		col.setColTag(getMyTag());	//タグを設定
+
+		if (getTriggerType() == false)
+		{
+
+		}
+	}
+	else
+	{
+		//交差していない
+
+		setCol(false);
+		setColTag(Tag::Invalid);
+		col.setColTag(Tag::Invalid);
+	}
+}
+
+
+// #################################### 取得　関係
+
+//半径取得
+int SphereCollision::getRadius()
+{
+	return *sp.mRadius;
+}
+
+//位置取得
+glm::ivec2 SphereCollision::getCenter()
+{
+	return *sp.mCenter;
+}
+
+/// #################################### 設定　関係
+
+//半径　設定　ポインタ
+void SphereCollision::setRadius(int *r)
+{
+	sp.mRadius = r;
+}
+
+//位置　設定　ポインタ
+void SphereCollision::setCenter(glm::ivec2 *pos)
+{
+	sp.mCenter = pos;
+}
+
+
