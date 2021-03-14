@@ -14,12 +14,16 @@ Enemy::Enemy(Entry* e) : Actor(e)
 
 	mVector = VECTOR_NONE;
 	
+	/*
 	mCol.setCenter(&colPos);
-
 	r  = mSize.x;
 	printf("R: %d\n",r);
 	mCol.setRadius(&r);
+	*/
 
+	mCol.setMin(&mPosition);
+	Max = mPosition + mSize;
+	mCol.setMax(&Max);
 
 
 }
@@ -28,15 +32,18 @@ Enemy::Enemy(Entry* e) : Actor(e)
 void Enemy::Update()
 {
 	//printf("Enemy: %d\n",mCol.getTag());
-	colPos = mPosition + (mSize / 2);
+	//colPos = mPosition + (mSize / 2);
+
+	Max = mPosition + mSize;
+
 }
 
 //•`‰æ
 void Enemy::Draw()
 {
-	DrawCircle(colPos.x, colPos.y, 100, GetColor(200,0,0), true);
+//	DrawCircle(colPos.x, colPos.y, 100, GetColor(200,0,0), true);
 
-//	DrawBox(mPosition.x, mPosition.y, mPosition.x + mSize.x, mPosition.y + mSize.y, GetColor(200, 0, 0), true);
+	DrawBox(mPosition.x, mPosition.y, mPosition.x + mSize.x, mPosition.y + mSize.y, GetColor(200, 0, 0), true);
 //	DrawFormatString(0, 32, GetColor(200, 0, 0), "# Enemy Position: %d , %d", mPosition.x, mPosition.y);
 
 }

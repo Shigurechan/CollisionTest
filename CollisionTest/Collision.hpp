@@ -21,23 +21,23 @@ typedef enum class Tag
 
 typedef struct LineSegment
 {
-	glm::ivec2 mStart;
-	glm::ivec2 mEnd;
+	glm::vec2 mStart;
+	glm::vec2 mEnd;
 
 
 }LineSegment;
 
 typedef struct AABB
 {
-	glm::ivec2 *mMax;
-	glm::ivec2 *mMin;
+	glm::vec2 *mMax;
+	glm::vec2 *mMin;
 
 }AABB;
 
 typedef struct Sphere
 {
-	glm::ivec2 *mCenter;	
-	int *mRadius;		
+	glm::vec2 *mCenter;	
+	float *mRadius;		
 }Sphere;
 
 /*####################################################
@@ -66,24 +66,26 @@ public:
 	//設定　関係
 	void setCol(bool b);				//当たったかどうか？
 	void setColTag(Tag type);			//取得したタイプ設定
-	void setVector(glm::ivec2* vec);	//方向設定
-	void setTriggerType(bool tri);			//トリガータイプを設定
+	void setVector(glm::vec2* vec);		//方向設定
+	void setTriggerType(bool tri);		//トリガータイプを設定
 	void setTag(Tag type);				//タグを設定
+	void setSpeed(glm::vec2 *spp);		//速度を設定
 
 	//取得　関係
 	Tag getMyTag();				//タイプを取得
-	bool getTriggerType();			//トリガータイプを取得
-	glm::ivec2 getVector();		//方向を取得
+	bool getTriggerType();		//トリガータイプを取得
+	glm::vec2 getVector();		//方向を取得
 	bool getCol();				//当たったかどうか？
 	Tag getTag();				//取得したタイプを取得
-
+	glm::vec2 getSpeed();		//速度を取得
 
 private:
 	bool IsTrigger;		//トリガータイプかどうか？
 	Tag my_TagType;		//自身タグ
 	Tag col_TagType;	//取得タグ
-	glm::ivec2 *Vector;	//方向
+	glm::vec2 *Vector;	//方向
 	bool isCol;			//当たったかどうか？
+	glm::vec2 *Speed;	//速度
 };
 
 
@@ -99,20 +101,21 @@ public:
 
 	void Intersect(BoxCollision &col);
 
-
 	//取得　関係
-	glm::ivec2 getMax();
-	glm::ivec2 getMin();
+	glm::vec2 getMax();
+	glm::vec2 getMin();
 
 
 	//設定　関係
-	void setMax(glm::ivec2 *max);
-	void setMin(glm::ivec2 *min);
+	void setMax(glm::vec2 *max);
+	void setMin(glm::vec2 *min);
 
-	void setMaxValue(glm::ivec2 &max);
-	void setMinValue(glm::ivec2 &min);
+	void setMaxValue(glm::vec2 &max);
+	void setMinValue(glm::vec2 &min);
 
 private:
+	
+
 	AABB box;
 };
 
@@ -134,15 +137,15 @@ public:
 
 
 	//取得　関係
-	int getRadius();		//半径
-	glm::ivec2 getCenter();	//位置
+	float getRadius();		//半径
+	glm::vec2 getCenter();	//位置
 
 	//設定　関係
-	void setRadius(int *r);				//半径
-	void setCenter(glm::ivec2 *pos);	//位置
+	void setRadius(float *r);				//半径
+	void setCenter(glm::vec2 *pos);	//位置
 
-	void setRadiusValue(int r);				//半径
-	void setCenterValue(glm::ivec2 pos);	//位置
+	void setRadiusValue(float r);				//半径
+	void setCenterValue(glm::vec2 pos);	//位置
 
 
 private:

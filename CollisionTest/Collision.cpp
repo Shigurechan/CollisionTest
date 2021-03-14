@@ -32,7 +32,7 @@ Tag Collision::getTag()
 }
 
 //方向を取得
-glm::ivec2 Collision::getVector()
+glm::vec2 Collision::getVector()
 {
 	return *Vector;
 }
@@ -47,6 +47,13 @@ Tag Collision::getMyTag()
 bool Collision::getCol()
 {
 	return isCol;
+}
+
+
+//速度を取得
+glm::vec2 Collision::getSpeed()
+{
+	return *Speed;
 }
 
 // #################################### 設定　関係
@@ -64,7 +71,7 @@ void Collision::setTag(Tag type)
 }
 
 //オブジェクトタイプを設定
-void Collision::setVector(glm::ivec2 *vec)
+void Collision::setVector(glm::vec2 *vec)
 {
 	Vector = vec;
 }
@@ -79,6 +86,14 @@ void Collision::setColTag(Tag type)
 void Collision::setCol(bool b)
 {
 	isCol = b;
+}
+
+
+
+//速度を設定
+void Collision::setSpeed(glm::vec2 *spp)
+{
+	Speed = spp;
 }
 
 
@@ -103,106 +118,78 @@ BoxCollision::BoxCollision()
 }
 
 
-
 void BoxCollision::Intersect(BoxCollision& col)
 {
-	if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
-		&& (col.getMax().y > box.mMin->y && box.mMax->y > col.getMin().y))
-	{
-		
+	
+
+
+	if ((col.getMax().x > box.mMin->x && box.mMax->x> col.getMin().x)
+		&& (col.getMax().y > box.mMin->y - getSpeed().y && box.mMax->y - getSpeed().y > col.getMin().y))
+	{		
 		setCol(true);				//当たり判定を設定
 		setColTag(col.getMyTag());	//タグを取得
 		col.setColTag(getMyTag());	//タグを設定
 
+		printf("X\n");
 		if (getTriggerType() == false)
 		{
 
-			//めり込み量を修正
-			if (getVector() == VECTOR_RIGHT)
+			if (getVector().x > 0) 
 			{
-				glm::ivec2 b = *box.mMax - *box.mMin;
-				box.mMin->x = (col.getMin().x - b.x);
+				glm::vec2 size = getMax() - getMin();
+				glm::vec2 pos = col.getMin() - size;
+				pos.y = getMin().y;
 
+				setMinValue(pos);
 			}
-			else if (getVector() == VECTOR_LEFT)
-			{
-			
-				box.mMin->x = (col.getMax().x);
 
-			}
-			else if (getVector() == VECTOR_UP)
-			{
-				//printf("ううう\n");
-				glm::ivec2 b = *box.mMax - *box.mMin;
-				box.mMin->y = (col.getMin().y + b.y + 1);
 
-			}
-			else if (getVector() == VECTOR_DOWN)
-			{
-				//printf("111\n");
 
-				glm::ivec2 b = *box.mMax - *box.mMin;
-
-				box.mMin->y = (col.getMin().y - b.y);
-
-			}
-			else if (getVector() == VECTOR_NONE)
-			{
-				//ベクトルが設定されていないとき
-				
-				if (col.getVector() == VECTOR_RIGHT)
-				{		
-					glm::ivec2 b = col.getMax() - col.getMin();
-					glm::ivec2 t = col.getMin();
-					t.x = box.mMin->x - b.x;
-					col.setMinValue(t);
-				}
-				else if (col.getVector() == VECTOR_LEFT)
-				{	
-					glm::ivec2 t = col.getMin();
-					t.x = box.mMax->x;
-					col.setMinValue(t);
-				}
-				else if (col.getVector() == VECTOR_UP)
-				{
-					glm::ivec2 b = col.getMax() - col.getMin();
-					glm::ivec2 t = col.getMin();
-					t.y = box.mMax->y;
-					col.setMinValue(t);
-
-				}
-				else if (col.getVector() == VECTOR_DOWN)
-				{
-					glm::ivec2 b = col.getMax() - col.getMin();
-					glm::ivec2 t = col.getMin();
-					t.y = box.mMin->y - b.y;
-					col.setMinValue(t);
-
-				}	
-			}
 		}
+
 	}
-	else
+	else if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
+		&& (col.getMax().y > box.mMin->y && box.mMax->y > col.getMin().y)) 
 	{
-		//交差していない
-		
+
+		setCol(true);				//当たり判定を設定
+		setColTag(col.getMyTag());	//タグを取得
+		col.setColTag(getMyTag());	//タグを設定
+
+		printf(" Y\n");
+
+
+		if (getTriggerType() == false)
+		{
+
+		}
+
+	}
+	else {
+
+
+
+
+
+		//交差していない		
 		setCol(false);
 		setColTag(Tag::Invalid);
 		col.setColTag(Tag::Invalid);
 	}
+	
 }
 
 
 // #################################### 取得　関係
 
 //最大値を取得
-glm::ivec2 BoxCollision::getMax()
+glm::vec2 BoxCollision::getMax()
 {
 	return *box.mMax;
 }
 
 //最小値を取得
-glm::ivec2 BoxCollision::getMin()
+glm::vec2 BoxCollision::getMin()
 {
 	return *box.mMin;
 }
@@ -213,25 +200,25 @@ glm::ivec2 BoxCollision::getMin()
 // #################################### 設定　関係
 
 //最大値を設定
-void BoxCollision::setMax(glm::ivec2 *max)
+void BoxCollision::setMax(glm::vec2 *max)
 {
 	box.mMax = max;
 }
 
 //最小値を設定
-void BoxCollision::setMin(glm::ivec2 *min)
+void BoxCollision::setMin(glm::vec2 *min)
 {
 	box.mMin = min;
 }
 
 //最大値の値を設定
-void BoxCollision::setMaxValue(glm::ivec2& max)
+void BoxCollision::setMaxValue(glm::vec2& max)
 {
 	*box.mMax = max;
 }
 
 //最小値の値を設定
-void BoxCollision::setMinValue(glm::ivec2& min)
+void BoxCollision::setMinValue(glm::vec2& min)
 {
 	*box.mMin = min;
 
@@ -272,7 +259,7 @@ void CircleCollision::Intersect(CircleCollision& col)
 	//printf("あああ%d\n",col.getRadius());
 	//printf("あああ%d\n",getRadius());
 
-	int c = sqrt((col.getCenter().x - getCenter().x) * (col.getCenter().x - getCenter().x) +
+	float c = sqrt((col.getCenter().x - getCenter().x) * (col.getCenter().x - getCenter().x) +
 			(col.getCenter().y - getCenter().y) * (col.getCenter().y - getCenter().y));
 
 	//printf("C:%d\n",c);
@@ -287,9 +274,9 @@ void CircleCollision::Intersect(CircleCollision& col)
 
 		if (getTriggerType() == false)
 		{
-			int len = sqrt((col.getCenter().x - getCenter().x) * (col.getCenter().x - getCenter().x) +
+			float len = sqrt((col.getCenter().x - getCenter().x) * (col.getCenter().x - getCenter().x) +
 				(col.getCenter().y - getCenter().y) * (col.getCenter().y - getCenter().y));
-			printf("len %d\n",len);
+			//printf("len %d\n",len);
 
 			float m = (col.getRadius() + getRadius()) - len;	//めり込み量
 
@@ -297,20 +284,20 @@ void CircleCollision::Intersect(CircleCollision& col)
 //			printf("ああああ %d\n", col.getRadius());
 
 //			printf("m %f\n",m);
-			glm::vec2 BA = getCenter() - col.getCenter();	//BAのベクトル
-//			printf("cccc  %f , %f\n", BA.x, BA.y);
+			
+			glm::vec2 vec = getVector();
+			vec = vec * -1.0f;	//ベクトルを反転
+			printf("vec : %.2f , %.2f \n", vec.x, vec.y);
 
-			BA = glm::normalize(BA);	//正規化
-//			printf("aaa %f , %f\n",BA.x,BA.y);
-			BA = BA * -1.0f;	//ベクトルの反転
-//			printf("bbb %f , %f\n", BA.x, BA.y);
+			vec = glm::normalize(vec);
+			vec.x = vec.x * m;
+			vec.y = vec.y * m;
+//			printf("vec : %.2f , %.2f \n", vec.x, vec.y);
 
-			BA = BA * m;
-			printf("BA %f , %f\n", BA.x, BA.y);
 
-			glm::ivec2 pos = BA;
-			glm::ivec2 p = getCenter() - pos;
-
+			
+			glm::vec2 p = getCenter() += (vec);
+			//printf("p : %d , %d \n",p.x,p.y);
 			setCenterValue(p);
 
 
@@ -333,13 +320,13 @@ void CircleCollision::Intersect(CircleCollision& col)
 // #################################### 取得　関係
 
 //半径取得
-int CircleCollision::getRadius()
+float CircleCollision::getRadius()
 {
 	return *sp.mRadius;
 }
 
 //位置取得
-glm::ivec2 CircleCollision::getCenter()
+glm::vec2 CircleCollision::getCenter()
 {
 	return *sp.mCenter;
 }
@@ -347,25 +334,25 @@ glm::ivec2 CircleCollision::getCenter()
 /// #################################### 設定　関係
 
 //半径　設定　ポインタ
-void CircleCollision::setRadius(int *r)
+void CircleCollision::setRadius(float *r)
 {
 	sp.mRadius = r;
 }
 
 //位置　設定　ポインタ
-void CircleCollision::setCenter(glm::ivec2 *pos)
+void CircleCollision::setCenter(glm::vec2 *pos)
 {
 	sp.mCenter = pos;
 }
 
 //半径 値を設定
-void CircleCollision::setRadiusValue(int r)
+void CircleCollision::setRadiusValue(float r)
 {
 	*sp.mRadius = r;
 }
 
 //位置　値を設定
-void CircleCollision::setCenterValue(glm::ivec2 pos)
+void CircleCollision::setCenterValue(glm::vec2 pos)
 {
 	*sp.mCenter = pos;
 }
