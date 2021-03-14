@@ -161,6 +161,14 @@ void BoxCollision::Intersect(BoxCollision& col)
 
 		if (getTriggerType() == false)
 		{
+			if (getVector().y > 0)
+			{
+				glm::vec2 size = getMax() - getMin();
+				glm::vec2 pos = col.getMin() - size;
+				pos.x = getMin().x;
+
+				setMinValue(pos);
+			}
 
 		}
 
