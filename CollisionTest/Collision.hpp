@@ -124,13 +124,13 @@ private:
 * 球の当たり判定
 ######################################################*/
 
-class SphereCollision : public Collision
+class CircleCollision : public Collision
 {
 public:
-	SphereCollision();		//コンストラクタ
-	~SphereCollision();		//デストラクタ
+	CircleCollision();		//コンストラクタ
+	~CircleCollision();		//デストラクタ
 
-	void Intersect(SphereCollision& col);
+	void Intersect(CircleCollision& col);
 
 
 	//取得　関係
@@ -138,8 +138,12 @@ public:
 	glm::ivec2 getCenter();	//位置
 
 	//設定　関係
-	void setRadius(int *r);		//半径
+	void setRadius(int *r);				//半径
 	void setCenter(glm::ivec2 *pos);	//位置
+
+	void setRadiusValue(int r);				//半径
+	void setCenterValue(glm::ivec2 pos);	//位置
+
 
 private:
 	Sphere sp;

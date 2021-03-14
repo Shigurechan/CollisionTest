@@ -13,31 +13,31 @@ Enemy::Enemy(Entry* e) : Actor(e)
 	mPosition.y = (SCREEN_HEIGHT / 2) - (mSize.y / 2);
 
 	mVector = VECTOR_NONE;
-	mCol.setVector(&mVector);
-	mCol.setTag(Tag::Player);
+	
+	mCol.setCenter(&colPos);
+
+	r  = mSize.x;
+	printf("R: %d\n",r);
+	mCol.setRadius(&r);
 
 
-	Max = mPosition + mSize;
-	mCol.setMax(&Max);
-	mCol.setMin(&mPosition);
-
-
-	mCol.setTag(Tag::Enemy);
 
 }
 
 //çXêV
 void Enemy::Update()
 {
-	printf("Enemy: %d\n",mCol.getTag());
-
+	//printf("Enemy: %d\n",mCol.getTag());
+	colPos = mPosition + (mSize / 2);
 }
 
 //ï`âÊ
 void Enemy::Draw()
 {
-	DrawBox(mPosition.x, mPosition.y, mPosition.x + mSize.x, mPosition.y + mSize.y, GetColor(200, 0, 0), true);
-	DrawFormatString(0, 32, GetColor(200, 0, 0), "# Enemy Position: %d , %d", mPosition.x, mPosition.y);
+	DrawCircle(colPos.x, colPos.y, 100, GetColor(200,0,0), true);
+
+//	DrawBox(mPosition.x, mPosition.y, mPosition.x + mSize.x, mPosition.y + mSize.y, GetColor(200, 0, 0), true);
+//	DrawFormatString(0, 32, GetColor(200, 0, 0), "# Enemy Position: %d , %d", mPosition.x, mPosition.y);
 
 }
 

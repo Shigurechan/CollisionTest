@@ -20,8 +20,8 @@ void Game_Scene::Update()
 	player->Update();
 	enemy->Update();
 	
-	enemy->mCol.Intersect(player->mCol);
-	//player->mCol.Intersect(enemy->mCol);
+	player->mCol.Intersect(enemy->mCol);
+
 
 }
 

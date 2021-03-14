@@ -13,18 +13,11 @@ Player::Player(Entry* e) : Actor(e)
 	mSize.y = 100 - 1;
 
 	//ìñÇΩÇËîªíËÇê›íË
+	mCol.setCenter(&colPos);
+	r = mSize.x;
+	mCol.setRadius(&r);
 
-	mCol.setVector(&mVector);
-	mCol.setTag(Tag::Player);
-
-
-	mCol.setMax(&Max);
-	mCol.setMin(&mPosition);
 	
-	mCol.setTag(Tag::Player);
-
-
-	//mCol.setTrigger(true);
 }
 
 
@@ -58,10 +51,10 @@ void Player::Update()
 
 	}
 	
-	Max = mPosition + mSize;
+	colPos = mPosition + (mSize / 2);
 
 
-	printf("player: %d\n", mCol.getTag());
+//	printf("player: %d\n", mCol.getTag());
 
 
 
@@ -70,9 +63,10 @@ void Player::Update()
 //ï`âÊ
 void Player::Draw()
 {
+	DrawCircle(colPos.x, colPos.y, 100, GetColor(0, 200, 0), true);
+//	DrawBox(mPosition.x, mPosition.y, mPosition.x + mSize.x, mPosition.y + mSize.y,GetColor(0,255,0),true);
+	//DrawFormatString(0,0,GetColor(0,255,0),"# Player Position: %d , %d",mPosition.x,mPosition.y);
 
-	DrawBox(mPosition.x, mPosition.y, mPosition.x + mSize.x, mPosition.y + mSize.y,GetColor(0,255,0),true);
-	DrawFormatString(0,0,GetColor(0,255,0),"# Player Position: %d , %d",mPosition.x,mPosition.y);
 }
 
 

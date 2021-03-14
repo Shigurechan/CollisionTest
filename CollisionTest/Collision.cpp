@@ -255,39 +255,77 @@ BoxCollision::~BoxCollision()
 
 
 //コンストラクタ
-SphereCollision::SphereCollision() 
+CircleCollision::CircleCollision()
 {
 
 }
 
 //デストラクタ
-SphereCollision::~SphereCollision()
+CircleCollision::~CircleCollision()
 {
 
 }
 
 //交差判定
-void SphereCollision::Intersect(SphereCollision& col)
+void CircleCollision::Intersect(CircleCollision& col)
 {
-	if ( false )
-	{
+	//printf("あああ%d\n",col.getRadius());
+	//printf("あああ%d\n",getRadius());
 
+	int c = sqrt((col.getCenter().x - getCenter().x) * (col.getCenter().x - getCenter().x) +
+			(col.getCenter().y - getCenter().y) * (col.getCenter().y - getCenter().y));
+
+	//printf("C:%d\n",c);
+	if ( c <= (col.getRadius() + getRadius()) )
+	{
+//		printf("true\n");
+
+		//タグと当たり判定
 		setCol(true);				//当たり判定を設定
 		setColTag(col.getMyTag());	//タグを取得
 		col.setColTag(getMyTag());	//タグを設定
 
 		if (getTriggerType() == false)
 		{
+			int len = sqrt((col.getCenter().x - getCenter().x) * (col.getCenter().x - getCenter().x) +
+				(col.getCenter().y - getCenter().y) * (col.getCenter().y - getCenter().y));
+			printf("len %d\n",len);
+
+			float m = (col.getRadius() + getRadius()) - len;	//めり込み量
+
+//			printf("いいい %d\n", getRadius());
+//			printf("ああああ %d\n", col.getRadius());
+
+//			printf("m %f\n",m);
+			glm::vec2 BA = getCenter() - col.getCenter();	//BAのベクトル
+//			printf("cccc  %f , %f\n", BA.x, BA.y);
+
+			BA = glm::normalize(BA);	//正規化
+//			printf("aaa %f , %f\n",BA.x,BA.y);
+			BA = BA * -1.0f;	//ベクトルの反転
+//			printf("bbb %f , %f\n", BA.x, BA.y);
+
+			BA = BA * m;
+			printf("BA %f , %f\n", BA.x, BA.y);
+
+			glm::ivec2 pos = BA;
+			glm::ivec2 p = getCenter() - pos;
+
+			setCenterValue(p);
+
+
 
 		}
 	}
 	else
 	{
 		//交差していない
+	//	printf("false\n");
 
-		setCol(false);
-		setColTag(Tag::Invalid);
-		col.setColTag(Tag::Invalid);
+		//タグと当たり判定
+		setCol(false);					//当たり判定を設定
+		setColTag(Tag::Invalid);		//タグを取得
+		col.setColTag(Tag::Invalid);	//タグを設定
 	}
 }
 
@@ -295,13 +333,13 @@ void SphereCollision::Intersect(SphereCollision& col)
 // #################################### 取得　関係
 
 //半径取得
-int SphereCollision::getRadius()
+int CircleCollision::getRadius()
 {
 	return *sp.mRadius;
 }
 
 //位置取得
-glm::ivec2 SphereCollision::getCenter()
+glm::ivec2 CircleCollision::getCenter()
 {
 	return *sp.mCenter;
 }
@@ -309,15 +347,30 @@ glm::ivec2 SphereCollision::getCenter()
 /// #################################### 設定　関係
 
 //半径　設定　ポインタ
-void SphereCollision::setRadius(int *r)
+void CircleCollision::setRadius(int *r)
 {
 	sp.mRadius = r;
 }
 
 //位置　設定　ポインタ
-void SphereCollision::setCenter(glm::ivec2 *pos)
+void CircleCollision::setCenter(glm::ivec2 *pos)
 {
 	sp.mCenter = pos;
 }
 
+//半径 値を設定
+void CircleCollision::setRadiusValue(int r)
+{
+	*sp.mRadius = r;
+}
 
+//位置　値を設定
+void CircleCollision::setCenterValue(glm::ivec2 pos)
+{
+	*sp.mCenter = pos;
+}
+
+
+
+
+ 

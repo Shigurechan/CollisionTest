@@ -17,10 +17,14 @@ public:
 	void Update();		//çXêV
 	void Draw();		//ï`âÊ
 
-	BoxCollision mCol;
+//	BoxCollision mCol;
+	CircleCollision mCol;
 private:
 	glm::ivec2 mSize;
-	glm::ivec2 Max;
+	int r;
+
+	glm::ivec2 colPos;
+
 
 
 };
