@@ -120,11 +120,9 @@ BoxCollision::BoxCollision()
 
 void BoxCollision::Intersect(BoxCollision& col)
 {
-	
-
 
 	if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
-		&& (col.getMax().y > box.mMin->y - getSpeed().y && box.mMax->y - getSpeed().y > col.getMin().y))
+		&& (col.getMax().y > box.mMin->y && box.mMax->y  > col.getMin().y))
 	{		
 		setCol(true);				//当たり判定を設定
 		setColTag(col.getMyTag());	//タグを取得
@@ -134,73 +132,15 @@ void BoxCollision::Intersect(BoxCollision& col)
 		if (getTriggerType() == false)
 		{
 
-			if (getVector().x > 0) 
-			{
-				glm::vec2 size = getMax() - getMin();
-				glm::vec2 pos = col.getMin() - size;
-				pos.y = getMin().y;
-
-				setMinValue(pos);
-
-			}
-			else if (getVector().x < 0)
-			{
-				glm::vec2 size = getMax() - getMin();
-				glm::vec2 pos = col.getMax();
-				pos.y = getMin().y;
-
-				setMinValue(pos);
-
-			}
+			glm::vec2 size = getMax() - getMin();
 
 
 
 		}
 
 	}
-	else if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
-		&& (col.getMax().y > box.mMin->y && box.mMax->y > col.getMin().y)) 
+	else 
 	{
-
-		setCol(true);				//当たり判定を設定
-		setColTag(col.getMyTag());	//タグを取得
-		col.setColTag(getMyTag());	//タグを設定
-
-		printf(" Y\n");
-
-
-		if (getTriggerType() == false)
-		{
-			if (getVector().y > 0)
-			{
-				glm::vec2 size = getMax() - getMin();
-				glm::vec2 pos = col.getMin() - size;
-				pos.x = getMin().x;
-
-				//setMinValue(pos);
-
-			}
-			else if (getVector().y < 0)
-			{
-				printf("ああ\n");
-				glm::vec2 size = getMax() - getMin();
-				glm::vec2 pos = col.getMax();
-				pos.x = getMin().x;
-
-				//setMinValue(pos);
-
-			}
-
-
-		}
-
-	}
-	else {
-
-
-
-
-
 		//交差していない		
 		setCol(false);
 		setColTag(Tag::Invalid);
