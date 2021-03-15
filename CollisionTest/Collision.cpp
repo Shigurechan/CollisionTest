@@ -123,7 +123,7 @@ void BoxCollision::Intersect(BoxCollision& col)
 	
 
 
-	if ((col.getMax().x > box.mMin->x && box.mMax->x> col.getMin().x)
+	if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
 		&& (col.getMax().y > box.mMin->y - getSpeed().y && box.mMax->y - getSpeed().y > col.getMin().y))
 	{		
 		setCol(true);				//“–‚½‚è”»’è‚ğİ’è
@@ -141,6 +141,16 @@ void BoxCollision::Intersect(BoxCollision& col)
 				pos.y = getMin().y;
 
 				setMinValue(pos);
+
+			}
+			else if (getVector().x < 0)
+			{
+				glm::vec2 size = getMax() - getMin();
+				glm::vec2 pos = col.getMax();
+				pos.y = getMin().y;
+
+				setMinValue(pos);
+
 			}
 
 
@@ -167,8 +177,20 @@ void BoxCollision::Intersect(BoxCollision& col)
 				glm::vec2 pos = col.getMin() - size;
 				pos.x = getMin().x;
 
-				setMinValue(pos);
+				//setMinValue(pos);
+
 			}
+			else if (getVector().y < 0)
+			{
+				printf("‚ ‚ \n");
+				glm::vec2 size = getMax() - getMin();
+				glm::vec2 pos = col.getMax();
+				pos.x = getMin().x;
+
+				//setMinValue(pos);
+
+			}
+
 
 		}
 
