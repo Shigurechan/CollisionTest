@@ -43,11 +43,13 @@ void Player::Update()
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_RIGHT) > 0)
 	{		
 		mVector.x = 1;
+
 	}
 	else 
 	{
 		mVector.x = 0;
 		mSpeed.x = 0;
+		s = 0;
 	}
 
 
@@ -66,7 +68,7 @@ void Player::Update()
 
 	}
 	
-	mPosition += mVector * mSpeed;
+	mPosition += mVector * mSpeed;	//ç¿ïWà⁄ìÆ
 
 
 

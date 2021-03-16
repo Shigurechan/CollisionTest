@@ -116,6 +116,10 @@ public:
 private:
 	
 
+	glm::vec2 getFixValue(glm::vec2 player_min,glm::vec2 player_max, glm::vec2 block_min,glm::vec2 block_max);	//•â³—Ê‚ğ‚Ì‚ğ“¾‚é
+
+
+
 	AABB box;
 };
 

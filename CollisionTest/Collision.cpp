@@ -117,29 +117,130 @@ BoxCollision::BoxCollision()
 	box.mMin = nullptr;	//AABB初期化
 }
 
+//補正量をのを得る
+glm::vec2 BoxCollision::getFixValue(glm::vec2 player_min, glm::vec2 player_max, glm::vec2 block_min, glm::vec2 block_max)
+{
+	//X軸の補正量
+	float xA = player_max.x - block_min.x;
+	float xB = block_max.x - player_min.x;
+	float x;
+	float y;
 
+	if (xA < xB)
+	{
+		x = xA;
+	}
+	else
+	{
+		x = xB;
+	}
+
+	//Y軸の補正量
+	float yA = player_max.y - block_min.y;
+	float yB = block_max.y - player_min.y;
+
+	if (yA < yB)
+	{
+		y = yA;
+	}
+	else
+	{
+		y = yB;
+	}
+
+	glm::vec2 pos;
+	pos.x = x;
+	pos.y = y;
+
+
+	return pos;
+}
+//交差判定
 void BoxCollision::Intersect(BoxCollision& col)
 {
 
+//	printf("%f\n",getVector().y);
+
+
 	if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
-		&& (col.getMax().y > box.mMin->y && box.mMax->y  > col.getMin().y))
-	{		
+		&& (col.getMax().y > box.mMin->y && box.mMax->y > col.getMin().y))
+	{
 		setCol(true);				//当たり判定を設定
 		setColTag(col.getMyTag());	//タグを取得
 		col.setColTag(getMyTag());	//タグを設定
 
-		printf("X\n");
-		if (getTriggerType() == false)
+		glm::ivec2 size = getMax() - getMin();	//サイズ
+
+		glm::vec2 fix = getFixValue(getMin(), getMax(), col.getMin(), col.getMax());	//めりこみ量
+		printf("X: %.2f\n", fix.x);
+		printf("y: %.2f\n", fix.y);
+
+		if (getVector().x > 0 && getVector().y == 0)
 		{
+			glm::vec2 p;
+			p.x = col.getMin().x - size.x;
+			p.y = getMin().y;
 
-			glm::vec2 size = getMax() - getMin();
+			setMinValue(p);
+		}else if (getVector().x < 0 && getVector().y == 0)
+		{
+			glm::vec2 p;
+			p.x = col.getMax().x;
+			p.y = getMin().y;
 
-
+			setMinValue(p);
 
 		}
+		else if (getVector().y < 0 && getVector().x == 0)
+		{
+			glm::vec2 p;
+			p.y = col.getMax().y;
+			p.x = getMin().x;
+
+			setMinValue(p);
+		}
+		else if (getVector().y > 0 && getVector().x == 0)
+		{
+			printf("あああ\n");
+			glm::vec2 p;
+			p.y = col.getMin().y - size.y;
+			p.x = getMin().x;
+
+			setMinValue(p);
+		}	
+		else if (getVector().x > 0 && getVector().y < 0)
+		{
+			
+		
+			if ((fix.x < fix.y))
+			{
+
+				printf("ああああ\n");
+				glm::vec2 p;
+				p.x = col.getMin().x - size.x;
+				p.y = getMin().y;
+				
+				setMinValue(p);
+
+			}
+			else {
+				printf("うううううう\n");
+
+				glm::vec2 p;
+				p.x = getMin().x;
+				p.y = col.getMax().y;
+
+				setMinValue(p);
+
+			}
+		}
+
+
+
+
 
 	}
-	else 
+	else
 	{
 		//交差していない		
 		setCol(false);

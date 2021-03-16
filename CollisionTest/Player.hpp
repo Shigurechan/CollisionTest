@@ -23,6 +23,8 @@ private:
 	int r;
 	glm::vec2 Max;
 
+	float s = 0;
+
 
 };
 
