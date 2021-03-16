@@ -19,26 +19,37 @@ typedef enum class Tag
 
 //プリミティブ型
 
+//線
 typedef struct LineSegment
 {
-	glm::vec2 mStart;
-	glm::vec2 mEnd;
+	glm::vec2 mStart;	
+	glm::vec2 mEnd;		
 
 
 }LineSegment;
 
+//AABB
 typedef struct AABB
 {
-	glm::vec2 *mMax;
-	glm::vec2 *mMin;
+	glm::vec2* mMin;	//最小値
+	glm::vec2* mMax;	//最大値
 
 }AABB;
 
-typedef struct Sphere
+//円
+typedef struct Circle
 {
-	glm::vec2 *mCenter;	
-	float *mRadius;		
-}Sphere;
+	glm::vec2* mCenter;	//中心点
+	float* mRadius;		//半径
+}Circle;
+
+//線分
+typedef struct Segment {
+	glm::vec2* mStart;	//始点
+	glm::vec2* mEnd;	//終点
+}Segment;
+
+
 
 /*####################################################
 * 当たり判定の基底クラス
@@ -116,7 +127,7 @@ public:
 private:
 	
 
-	glm::vec2 getFixValue(glm::vec2 player_min,glm::vec2 player_max, glm::vec2 block_min,glm::vec2 block_max);	//補正量をのを得る
+	glm::ivec2 getFixValue(glm::vec2 player_min,glm::vec2 player_max, glm::vec2 block_min,glm::vec2 block_max);	//補正量をのを得る
 
 
 
@@ -153,9 +164,42 @@ public:
 
 
 private:
-	Sphere sp;
+	Circle sp;
 };
 
+
+
+
+/*####################################################
+* 線分の当たり判定
+######################################################*/
+
+class SegmentCollision : public Collision
+{
+public:
+	SegmentCollision();		//コンストラクタ
+	~SegmentCollision();		//デストラクタ
+
+	void Intersect(SegmentCollision& col);
+
+
+	/*NOTE 未実装*/
+
+	//取得　関係
+	float getRadius();		//半径
+	glm::vec2 getCenter();	//位置
+
+	//設定　関係
+	void setRadius(float* r);				//半径
+	void setCenter(glm::vec2* pos);	//位置
+
+	void setRadiusValue(float r);				//半径
+	void setCenterValue(glm::vec2 pos);	//位置
+
+
+private:
+	Circle sp;
+};
 
 
 

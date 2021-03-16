@@ -118,7 +118,7 @@ BoxCollision::BoxCollision()
 }
 
 //補正量をのを得る
-glm::vec2 BoxCollision::getFixValue(glm::vec2 player_min, glm::vec2 player_max, glm::vec2 block_min, glm::vec2 block_max)
+glm::ivec2 BoxCollision::getFixValue(glm::vec2 player_min, glm::vec2 player_max, glm::vec2 block_min, glm::vec2 block_max)
 {
 	//X軸の補正量
 	float xA = player_max.x - block_min.x;
@@ -148,106 +148,108 @@ glm::vec2 BoxCollision::getFixValue(glm::vec2 player_min, glm::vec2 player_max, 
 		y = yB;
 	}
 
-	glm::vec2 pos;
+	glm::ivec2 pos;
 	pos.x = x;
 	pos.y = y;
 
 
 	return pos;
 }
+
+
+glm::ivec2 SegmentCo(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d)
+{
+	float det = (a.x - b.x) * (d.y - c.y) - (d.x - c.x) * (a.y - b.y);
+	float t = ((d.y - c.y) * (d.x - b.x) + (c.x - d.x) * (d.y - b.y)) / det;
+	float x = t * a.x + (1.0 - t) * b.x;
+	float y = t * a.y + (1.0 - t) * b.y;
+
+	return glm::ivec2(x, y);
+}
+
+
 //交差判定
 void BoxCollision::Intersect(BoxCollision& col)
 {
+	setCol(true);				//当たり判定を設定
+	setColTag(col.getMyTag());	//タグを取得
+	col.setColTag(getMyTag());	//タグを設定
 
-//	printf("%f\n",getVector().y);
+
 
 
 	if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
 		&& (col.getMax().y > box.mMin->y && box.mMax->y > col.getMin().y))
 	{
-		setCol(true);				//当たり判定を設定
-		setColTag(col.getMyTag());	//タグを取得
-		col.setColTag(getMyTag());	//タグを設定
-
-		glm::ivec2 size = getMax() - getMin();	//サイズ
-
-		glm::vec2 fix = getFixValue(getMin(), getMax(), col.getMin(), col.getMax());	//めりこみ量
-		printf("X: %.2f\n", fix.x);
-		printf("y: %.2f\n", fix.y);
-
-		if (getVector().x > 0 && getVector().y == 0)
+	
+		if(getTriggerType() == false)
 		{
-			glm::vec2 p;
-			p.x = col.getMin().x - size.x;
-			p.y = getMin().y;
 
-			setMinValue(p);
-		}else if (getVector().x < 0 && getVector().y == 0)
-		{
-			glm::vec2 p;
-			p.x = col.getMax().x;
-			p.y = getMin().y;
+			//サイズを取得
+			 
+			//相手
+			glm::vec2 colSize = col.getMax() - col.getMin();
+			colSize.x = colSize.x / 2;
+			colSize.y = colSize.y / 2;
 
-			setMinValue(p);
+			//自分
+			glm::vec2 boxSize = *box.mMax - *box.mMin;
+			boxSize.x = boxSize.x / 2;
+			boxSize.y = boxSize.y / 2;
 
-		}
-		else if (getVector().y < 0 && getVector().x == 0)
-		{
-			glm::vec2 p;
-			p.y = col.getMax().y;
-			p.x = getMin().x;
+			float colCenterX = (col.getMin().x + colSize.x);
+			float colCenterY = (col.getMin().y + colSize.y);
+			float boxCenterX = (box.mMin->x + boxSize.x);
+			float boxCenterY = (box.mMin->y + boxSize.y);
 
-			setMinValue(p);
-		}
-		else if (getVector().y > 0 && getVector().x == 0)
-		{
-			printf("あああ\n");
-			glm::vec2 p;
-			p.y = col.getMin().y - size.y;
-			p.x = getMin().x;
 
-			setMinValue(p);
-		}	
-		else if (getVector().x > 0 && getVector().y < 0)
-		{
-			
-		
-			if ((fix.x < fix.y))
+			float deltaX = boxCenterX - colCenterX; //正ならboxが右にいる
+			float deltaY = boxCenterY - colCenterY; //正ならboxが上にいる
+			float adjust = 0.0;
+
+			if (fabs(deltaX) < fabs(deltaY))
 			{
-
-				printf("ああああ\n");
-				glm::vec2 p;
-				p.x = col.getMin().x - size.x;
-				p.y = getMin().y;
-				
-				setMinValue(p);
-
+			//	printf(", Y adjust \n");
+				if (deltaY > 0)
+				{
+					adjust = col.getMax().y - box.mMin->y + 0.001; // +する
+				}
+				else
+				{
+					adjust = -(box.mMax->y - col.getMin().y + 0.001); // -する
+				}
+				box.mMin->y += adjust;
+				box.mMax->y += adjust;
 			}
-			else {
-				printf("うううううう\n");
+			else
+			{
+			//	printf(", X adjust \n");
+				if (deltaX > 0)
+				{
+					adjust = col.getMax().x - box.mMin->x + 0.001; // +する
 
-				glm::vec2 p;
-				p.x = getMin().x;
-				p.y = col.getMax().y;
-
-				setMinValue(p);
-
+				}
+				else
+				{
+					adjust = -(box.mMax->x - col.getMin().x + 0.001); // -する
+				}
+				box.mMin->x += adjust;
+				box.mMax->x += adjust;
 			}
 		}
-
-
-
-
-
 	}
 	else
 	{
 		//交差していない		
-		setCol(false);
-		setColTag(Tag::Invalid);
-		col.setColTag(Tag::Invalid);
 	}
-	
+
+
+
+	//当たってない時
+	setCol(false);
+	setColTag(Tag::Invalid);
+	col.setColTag(Tag::Invalid);
+
 }
 
 
