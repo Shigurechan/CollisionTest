@@ -117,47 +117,9 @@ BoxCollision::BoxCollision()
 	box.mMin = nullptr;	//AABB初期化
 }
 
-//補正量をのを得る
-glm::ivec2 BoxCollision::getFixValue(glm::vec2 player_min, glm::vec2 player_max, glm::vec2 block_min, glm::vec2 block_max)
-{
-	//X軸の補正量
-	float xA = player_max.x - block_min.x;
-	float xB = block_max.x - player_min.x;
-	float x;
-	float y;
 
-	if (xA < xB)
-	{
-		x = xA;
-	}
-	else
-	{
-		x = xB;
-	}
-
-	//Y軸の補正量
-	float yA = player_max.y - block_min.y;
-	float yB = block_max.y - player_min.y;
-
-	if (yA < yB)
-	{
-		y = yA;
-	}
-	else
-	{
-		y = yB;
-	}
-
-	glm::ivec2 pos;
-	pos.x = x;
-	pos.y = y;
-
-
-	return pos;
-}
-
-
-glm::ivec2 SegmentCo(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d)
+/*
+void (glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d)
 {
 	float det = (a.x - b.x) * (d.y - c.y) - (d.x - c.x) * (a.y - b.y);
 	float t = ((d.y - c.y) * (d.x - b.x) + (c.x - d.x) * (d.y - b.y)) / det;
@@ -166,21 +128,23 @@ glm::ivec2 SegmentCo(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d)
 
 	return glm::ivec2(x, y);
 }
-
+*/
 
 //交差判定
 void BoxCollision::Intersect(BoxCollision& col)
 {
-	setCol(true);				//当たり判定を設定
-	setColTag(col.getMyTag());	//タグを取得
-	col.setColTag(getMyTag());	//タグを設定
-
+	
 
 
 
 	if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
 		&& (col.getMax().y > box.mMin->y && box.mMax->y > col.getMin().y))
 	{
+
+		setCol(true);				//当たり判定を設定
+		setColTag(col.getMyTag());	//タグを取得
+		col.setColTag(getMyTag());	//タグを設定
+
 	
 		if(getTriggerType() == false)
 		{
@@ -212,11 +176,11 @@ void BoxCollision::Intersect(BoxCollision& col)
 			//	printf(", Y adjust \n");
 				if (deltaY > 0)
 				{
-					adjust = col.getMax().y - box.mMin->y + 0.001; // +する
+					adjust = col.getMax().y - box.mMin->y + 0.001f; // +する
 				}
 				else
 				{
-					adjust = -(box.mMax->y - col.getMin().y + 0.001); // -する
+					adjust = -(box.mMax->y - col.getMin().y + 0.001f); // -する
 				}
 				box.mMin->y += adjust;
 				box.mMax->y += adjust;
@@ -226,29 +190,33 @@ void BoxCollision::Intersect(BoxCollision& col)
 			//	printf(", X adjust \n");
 				if (deltaX > 0)
 				{
-					adjust = col.getMax().x - box.mMin->x + 0.001; // +する
+					adjust = col.getMax().x - box.mMin->x + 0.001f; // +する
 
 				}
 				else
 				{
-					adjust = -(box.mMax->x - col.getMin().x + 0.001); // -する
+					adjust = -(box.mMax->x - col.getMin().x + 0.001f); // -する
 				}
 				box.mMin->x += adjust;
 				box.mMax->x += adjust;
 			}
 		}
+		else {
+			//Trigger true
+		}
 	}
 	else
 	{
-		//交差していない		
+		
+		//当たってない時
+		setCol(false);
+		setColTag(Tag::Invalid);
+		col.setColTag(Tag::Invalid);
+
 	}
 
 
 
-	//当たってない時
-	setCol(false);
-	setColTag(Tag::Invalid);
-	col.setColTag(Tag::Invalid);
 
 }
 
