@@ -54,16 +54,6 @@ typedef struct Segment {
 /*####################################################
 * 当たり判定の基底クラス
 ######################################################*/
-
-/*当たり判定の基底クラス
-* 
-* 機能一覧
-* トリガータイプ
-* タグ
-* 当たったかどうか？
-* 
-* 
-*/
 class Collision
 {
 public:
@@ -125,12 +115,6 @@ public:
 	void setMinValue(glm::vec2 &min);
 
 private:
-	
-
-	glm::ivec2 getFixValue(glm::vec2 player_min,glm::vec2 player_max, glm::vec2 block_min,glm::vec2 block_max);	//補正量をのを得る
-
-
-
 	AABB box;
 };
 
@@ -156,10 +140,10 @@ public:
 	glm::vec2 getCenter();	//位置
 
 	//設定　関係
-	void setRadius(float *r);				//半径
+	void setRadius(float *r);		//半径
 	void setCenter(glm::vec2 *pos);	//位置
 
-	void setRadiusValue(float r);				//半径
+	void setRadiusValue(float r);		//半径
 	void setCenterValue(glm::vec2 pos);	//位置
 
 
@@ -174,31 +158,36 @@ private:
 * 線分の当たり判定
 ######################################################*/
 
+
+/*めりこみ修正不可
+*/
 class SegmentCollision : public Collision
 {
 public:
 	SegmentCollision();		//コンストラクタ
-	~SegmentCollision();		//デストラクタ
+	~SegmentCollision();	//デストラクタ
 
-	void Intersect(SegmentCollision& col);
+	void Intersect(SegmentCollision& col);	//交差判定
 
 
-	/*NOTE 未実装*/
-
+	
 	//取得　関係
-	float getRadius();		//半径
-	glm::vec2 getCenter();	//位置
+	glm::vec2 getStart();	//始点
+	glm::vec2 getEnd();		//終点
+
 
 	//設定　関係
-	void setRadius(float* r);				//半径
-	void setCenter(glm::vec2* pos);	//位置
+	void setStart(glm::vec2 *pos);	//始点
+	void setEnd(glm::vec2 *pos);	//終点
 
-	void setRadiusValue(float r);				//半径
-	void setCenterValue(glm::vec2 pos);	//位置
+
+
 
 
 private:
-	Circle sp;
+	bool SegmentCol(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d);		//線分と線分の当たり判定
+	glm::ivec2 InterPos(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d);	//交点座標
+	Segment seg;
 };
 
 

@@ -17,7 +17,8 @@ public:
 	void Update();		//çXêV
 	void Draw();		//ï`âÊ
 
-	BoxCollision mCol;
+	SegmentCollision mCol;
+//	BoxCollision mCol;
 //	CircleCollision mCol;
 private:
 	glm::vec2 mSize;

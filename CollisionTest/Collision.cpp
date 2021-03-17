@@ -118,18 +118,6 @@ BoxCollision::BoxCollision()
 }
 
 
-/*
-void (glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d)
-{
-	float det = (a.x - b.x) * (d.y - c.y) - (d.x - c.x) * (a.y - b.y);
-	float t = ((d.y - c.y) * (d.x - b.x) + (c.x - d.x) * (d.y - b.y)) / det;
-	float x = t * a.x + (1.0 - t) * b.x;
-	float y = t * a.y + (1.0 - t) * b.y;
-
-	return glm::ivec2(x, y);
-}
-*/
-
 //交差判定
 void BoxCollision::Intersect(BoxCollision& col)
 {
@@ -315,6 +303,7 @@ void CircleCollision::Intersect(CircleCollision& col)
 
 		if (getTriggerType() == false)
 		{
+
 			float len = sqrt((col.getCenter().x - getCenter().x) * (col.getCenter().x - getCenter().x) +
 				(col.getCenter().y - getCenter().y) * (col.getCenter().y - getCenter().y));
 			//printf("len %d\n",len);
@@ -339,7 +328,7 @@ void CircleCollision::Intersect(CircleCollision& col)
 			
 			glm::vec2 p = getCenter() += (vec);
 			//printf("p : %d , %d \n",p.x,p.y);
-			setCenterValue(p);
+		//	setCenterValue(p);
 
 
 
@@ -399,6 +388,101 @@ void CircleCollision::setCenterValue(glm::vec2 pos)
 }
 
 
+/*##############################################################################################################################################*/
+
+/*####################################################
+*　線分同士の当たり判定
+######################################################*/
+
+//コンストラクタ
+SegmentCollision::SegmentCollision()
+{
+
+}
 
 
- 
+//線分と線分の当たり判定
+bool SegmentCollision::SegmentCol(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d) {
+
+	float ta = (c.x - d.x) * (a.y - c.y) + (c.y - d.y) * (c.x - a.x);
+	float tb = (c.x - d.x) * (b.y - c.y) + (c.y - d.y) * (c.x - b.x);
+	float tc = (a.x - b.x) * (c.y - a.y) + (a.y - b.y) * (a.x - c.x);
+	float td = (a.x - b.x) * (d.y - a.y) + (a.y - b.y) * (a.x - d.x);
+
+	if ((tc * td < 0) && (ta * tb < 0))
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+//線分と線分の交点座標
+glm::ivec2 SegmentCollision::InterPos(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d)
+{
+	float det = (a.x - b.x) * (d.y - c.y) - (d.x - c.x) * (a.y - b.y);
+	float t = ((d.y - c.y) * (d.x - b.x) + (c.x - d.x) * (d.y - b.y)) / det;
+	float x = t * a.x + (1.0 - t) * b.x;
+	float y = t * a.y + (1.0 - t) * b.y;
+
+	return glm::ivec2(x, y);
+}
+
+
+//交差判定
+void SegmentCollision::Intersect(SegmentCollision& col)
+{
+	if (SegmentCol(*seg.mStart,*seg.mEnd,col.getStart(),col.getEnd()) == true)
+	{
+		glm::ivec2 pos = InterPos(*seg.mStart, *seg.mEnd, col.getStart(), col.getEnd());
+		printf("pos: %d , %d\n",pos.x, pos.y);
+		
+	}
+	else 
+	{
+
+	}
+
+}
+
+//取得　関係
+
+//始点
+glm::vec2 SegmentCollision::getStart()
+{
+	return *seg.mStart;
+}
+
+
+//終点
+glm::vec2 SegmentCollision::getEnd()
+{
+	return *seg.mEnd;
+
+}
+
+
+//設定　関係
+
+//始点
+void SegmentCollision::setStart(glm::vec2* pos)
+{
+	seg.mStart = pos;
+}
+
+//終点
+void SegmentCollision::setEnd(glm::vec2* pos)
+{
+	seg.mEnd = pos;
+
+}
+
+
+
+
+//デストラクタ
+SegmentCollision::~SegmentCollision()
+{
+
+}

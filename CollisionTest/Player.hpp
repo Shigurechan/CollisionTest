@@ -15,7 +15,8 @@ public:
 	void Update();		//çXêV
 	void Draw();		//ï`âÊ
 
-	BoxCollision mCol;	
+//	BoxCollision mCol;
+	SegmentCollision mCol;
 //	CircleCollision mCol;
 private:
 

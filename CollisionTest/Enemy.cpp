@@ -21,10 +21,16 @@ Enemy::Enemy(Entry* e) : Actor(e)
 	mCol.setRadius(&r);
 	*/
 
+	/*
 	mCol.setMin(&mPosition);
-	Max = mPosition + mSize;
 	mCol.setMax(&Max);
+	*/
+	Max = mPosition;
+	Max.x = mPosition.x + mSize.x;
 
+
+	mCol.setStart(&mPosition);
+	mCol.setEnd(&Max);
 
 }
 
@@ -34,7 +40,8 @@ void Enemy::Update()
 	//printf("Enemy: %d\n",mCol.getTag());
 	//colPos = mPosition + (mSize / 2);
 
-	Max = mPosition + mSize;
+	Max = mPosition;
+	Max.x = mPosition.x + mSize.x;
 
 }
 

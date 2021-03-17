@@ -20,12 +20,21 @@ Player::Player(Entry* e) : Actor(e)
 
 	mCol.setVector(&mVector);
 	*/
-	Max = mPosition + mSize;
+	
+	
+	Max = mPosition;
+	Max.y = mPosition.y + mSize.y;
+
+	/*
 	mCol.setMin(&mPosition);
 	mCol.setMax(&Max);
 
 	mCol.setVector(&mVector);
 	mCol.setSpeed(&mSpeed);
+	*/
+
+	mCol.setStart(&mPosition);
+	mCol.setEnd(&Max);
 
 }
 
@@ -74,7 +83,9 @@ void Player::Update()
 
 //	colPos = mPosition + (mSize / 2);
 
-	Max = mPosition + mSize;
+	//Max = mPosition + mSize;
+	Max.x = mPosition.x;
+	Max.y = mPosition.y + mSize.y;
 
 
 
